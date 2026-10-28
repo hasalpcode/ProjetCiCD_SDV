@@ -10,15 +10,19 @@ export class TaskService {
 
   private taskRepository = inject(TaskRepository);
 
+  private api_url = 'http://localhost:8080/api/todos';
+
   //  private tasks = signal<Task[]>([
   //   { id: 1, title: 'Apprendre les Signals', description: 'signal, computed, effect', done: true,  priority: 'haute',   tags: ['angular', 'signals'] },
   //   { id: 2, title: 'Comprendre les services', description: 'Injection de dépendances', done: false, priority: 'moyenne', tags: ['angular', 'services'] },
   //   { id: 3, title: 'Créer TaskForm',          description: 'Ajouter des tâches',        done: false, priority: 'basse',   tags: ['pratique'] },
   // ]);
-  
+
   private tasks = signal<Task[]>([]);
 
-  readonly allTasks = this.tasks.asReadonly();
+  private http = inject(HttpClient);
+
+  readonly allTasks = this.http.get<Task[]>(this.api_url);
 
   readonly doneTasks = computed(() => this.tasks().filter(task => task.done).length);
 
