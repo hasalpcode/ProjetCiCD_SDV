@@ -20,20 +20,21 @@ export class TaskService {
 
   private tasks = signal<Task[]>([]);
 
-  private http = inject(HttpClient);
 
-  readonly allTasks = this.http.get<Task[]>(this.api_url);
 
   readonly doneTasks = computed(() => this.tasks().filter(task => task.done).length);
 
-
+readonly allTasks = this.tasks.asReadonly();
   readonly pendingTasksCount = computed(()=> this.tasks().filter(t=> !t.done).length)
 
   getAllTasks() {
     this.taskRepository.getAll().subscribe({
       next: tasks => this.tasks.set(tasks),
+      
       error: err => console.error('Erreur chargement:', err),
     });
+
+    console.log('getAllTasks called, current tasks:', this.tasks());
   }
   toggleTaskDone(id: number) {
     this.taskRepository.toggle(id).subscribe({
@@ -42,7 +43,7 @@ export class TaskService {
     });
   }
 
-  addTask(request: { title: string; description: string; priority: string; tags: string[] }) {
+  addTask(request: { title: string; description: string; priority: string; tags: string[]; done: boolean }) {
      this.taskRepository.create(request).subscribe({
       next: created => this.tasks.update(list => [...list, created]),
       error: err => console.error('Erreur ajout:', err),

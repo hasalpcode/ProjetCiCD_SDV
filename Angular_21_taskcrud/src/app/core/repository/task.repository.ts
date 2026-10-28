@@ -8,13 +8,13 @@ import { Observable } from "rxjs";
 })
 export class TaskRepository {
   private http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/tasks';
+  private readonly apiUrl = 'http://localhost:8080/api/todos';
 
    getAll(): Observable<Task[]> {
     return this.http.get<Task[]>(this.apiUrl);
   }
 
-  create(request: { title: string; description: string; priority: string; tags: string[] }): Observable<Task> {
+  create(request: { title: string; description: string; priority: string; tags: string[]; done: boolean }): Observable<Task> {
     return this.http.post<Task>(this.apiUrl, request);
   }
 

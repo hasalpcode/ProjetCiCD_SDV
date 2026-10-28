@@ -69,6 +69,16 @@ public class TodoController {
 	}
 	
 	
+	@Operation(summary="toggle the done status of a todo")
+	@PutMapping("{id}/toggle")
+	public Todo toggleTodo(@PathVariable Long id){
+		var entity = todoRepository.findById(id).orElseThrow(()-> new TodoNotFoundException(id));
+		entity.setDone(!Boolean.TRUE.equals(entity.getDone()));
+		todoRepository.save(entity);
+		return entity;
+
+	}
+
 	@Operation(summary="destroy a todo in the base")
 	@DeleteMapping("{id}")
 	public void deleteTodo(@PathVariable Long id){
