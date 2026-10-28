@@ -1,11 +1,27 @@
 @if (task(); as t) {
-  <div class="max-w-lg mx-auto bg-white rounded-lg shadow p-6">
-    <h2 class="text-2xl font-bold text-slate-800">{{ t.title }}</h2>
-    <p class="mt-2 text-slate-600">{{ t.description }}</p>
-    <p class="mt-2">Priorité : {{ t.priority }}</p>
-    <p class="mt-2">Statut : {{ t.done ? '✓ Terminée' : 'En cours' }}</p>
-    <a routerLink="/tasks" class="inline-block mt-4 text-blue-600 hover:underline">← Retour</a>
+  <div class="mx-auto max-w-xl rounded-[28px] border border-slate-200 bg-white/90 p-6 shadow-[0_22px_50px_rgba(15,23,42,0.08)] md:p-8">
+    <div class="mb-5">
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-sky-700">Détail</p>
+      <h2 class="mt-2 text-3xl font-black text-slate-800">{{ t.title }}</h2>
+    </div>
+
+    <div class="space-y-4 text-slate-700">
+      <p class="rounded-2xl bg-slate-50 p-4 text-base leading-7 text-slate-600">{{ t.description }}</p>
+      <div class="flex flex-wrap gap-3">
+        <span class="rounded-full bg-amber-100 px-3 py-1.5 text-sm font-semibold text-amber-700">Priorité : {{ t.priority }}</span>
+        <span class="rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-semibold text-emerald-700">Statut : {{ t.done ? '✓ Terminée' : 'En cours' }}</span>
+      </div>
+    </div>
+
+    <a
+      routerLink="/tasks"
+      class="mt-6 inline-flex rounded-xl bg-gradient-to-r from-sky-600 to-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-500/20 transition hover:brightness-110"
+    >
+      ← Retour à la liste
+    </a>
   </div>
 } @else {
-  <p>Tâche introuvable.</p>
+  <div class="rounded-2xl border border-dashed border-slate-300 bg-white/80 p-8 text-center text-slate-600 shadow-sm">
+    Tâche introuvable.
+  </div>
 }

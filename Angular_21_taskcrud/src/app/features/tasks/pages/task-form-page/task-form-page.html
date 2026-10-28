@@ -1,52 +1,60 @@
-<div class="max-w-lg mx-auto bg-white rounded-lg shadow p-6">
-  <h2 class="text-2xl font-bold text-slate-800 mb-4">Nouvelle tâche</h2>
+<div class="mx-auto max-w-xl rounded-[28px] border border-slate-200 bg-white/85 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm md:p-8">
+  <div class="mb-6">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-sky-700">Ajouter</p>
+    <h2 class="mt-2 text-3xl font-black text-slate-800">Nouvelle tâche</h2>
+  </div>
 
-  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-
-    <!-- Titre -->
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
     <div>
-      <label class="block text-sm font-medium text-slate-700">Titre</label>
-      <input formControlName="title"
-             class="mt-1 w-full border border-slate-300 rounded px-3 py-2" />
+      <label class="mb-2 block text-sm font-semibold text-slate-700">Titre</label>
+      <input
+        formControlName="title"
+        class="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-slate-800 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+      />
 
       @if (taskForm.get('title')?.touched && taskForm.get('title')?.invalid) {
-        <p class="text-red-600 text-sm mt-1">
+        <p class="mt-1 text-sm font-medium text-red-600">
           Le titre est obligatoire (3 caractères minimum).
         </p>
       }
     </div>
 
-    <!-- Description -->
     <div>
-      <label class="block text-sm font-medium text-slate-700">Description</label>
-      <textarea formControlName="description"
-                class="mt-1 w-full border border-slate-300 rounded px-3 py-2"></textarea>
+      <label class="mb-2 block text-sm font-semibold text-slate-700">Description</label>
+      <textarea
+        formControlName="description"
+        rows="4"
+        class="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-slate-800 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+      ></textarea>
     </div>
 
-    <!-- Priorité -->
     <div>
-      <label class="block text-sm font-medium text-slate-700">Priorité</label>
-      <select formControlName="priority"
-              class="mt-1 w-full border border-slate-300 rounded px-3 py-2">
+      <label class="mb-2 block text-sm font-semibold text-slate-700">Priorité</label>
+      <select
+        formControlName="priority"
+        class="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-slate-800 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+      >
         <option value="basse">Basse</option>
         <option value="moyenne">Moyenne</option>
         <option value="haute">Haute</option>
       </select>
     </div>
 
-    <!-- Tags -->
     <div>
-      <label class="block text-sm font-medium text-slate-700">Tags (séparés par des virgules)</label>
-      <input formControlName="tags" placeholder="angular, java, urgent"
-             class="mt-1 w-full border border-slate-300 rounded px-3 py-2" />
+      <label class="mb-2 block text-sm font-semibold text-slate-700">Tags (séparés par des virgules)</label>
+      <input
+        formControlName="tags"
+        placeholder="angular, java, urgent"
+        class="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-slate-800 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+      />
     </div>
 
-    <button type="submit"
-     [disabled]="taskForm.invalid"
-            class="bg-slate-800 text-white rounded py-2 hover:bg-slate-700
-               disabled:opacity-50 disabled:cursor-not-allowed">
+    <button
+      type="submit"
+      [disabled]="taskForm.invalid"
+      class="rounded-xl bg-gradient-to-r from-sky-600 to-emerald-500 px-4 py-3 text-base font-semibold text-white shadow-lg shadow-sky-500/20 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+    >
       Créer la tâche
     </button>
-
   </form>
 </div>
