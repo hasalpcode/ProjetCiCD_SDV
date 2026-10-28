@@ -1,0 +1,10 @@
+<div class="flex flex-wrap gap-4 justify-center items-start p-0 md:p-4 bg-slate-50 ">
+
+    @for(task of tasks(); track task.id){
+        <app-task-card [mytask]="task" (toggle)="onToggleDone(task.id)"></app-task-card>
+
+    }
+
+        <p class="text-center text-slate-600 my-2">{{ doneCount() }} tâche(s) terminée(s)</p>
+
+</div>

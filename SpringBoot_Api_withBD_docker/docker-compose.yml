@@ -1,0 +1,43 @@
+version: '3.8'
+
+volumes:
+  todo_api_springboot_mysql-data:
+
+networks:
+  todo_api_springboot_network:
+    name: todo_api_springboot_network
+
+services:
+  application:
+    build: .
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/todo_db
+      - SPRING_DATASOURCE_USERNAME=todoapp
+      - SPRING_DATASOURCE_PASSWORD=todoapp
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - todo_api_springboot_network
+    ports:
+      - "8080:8080"
+
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: todo_db
+      MYSQL_USER: todoapp
+      MYSQL_PASSWORD: todoapp
+    ports:
+      - "3308:3306"
+    networks:
+      - todo_api_springboot_network
+    volumes: 
+      - todo_api_springboot_mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 3s
+      timeout: 30s
+      retries: 5

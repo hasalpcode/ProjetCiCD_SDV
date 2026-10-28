@@ -1,0 +1,11 @@
+<header class="bg-slate-800 text-white p-4">
+  <h1 class="text-2xl font-bold">{{ title() }}</h1>
+  <nav class="mt-2 flex gap-4">
+    <a routerLink="/tasks" class="hover:underline">Toutes les tâches</a>
+    <a routerLink="/tasks/new" class="hover:underline">Nouvelle tâche</a>
+  </nav>
+</header>
+
+<main class="p-4">
+  <router-outlet />
+</main>
