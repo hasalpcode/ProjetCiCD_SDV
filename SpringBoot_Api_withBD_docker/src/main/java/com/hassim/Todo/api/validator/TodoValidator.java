@@ -22,8 +22,8 @@ public class TodoValidator implements ITodoValidator {
 			throw new TodoBadRequestException("the description is mandatory");
 		}
 		
-		if(Objects.isNull(todo.getCompleted())) {
-			throw new TodoBadRequestException("completed is mandatory");
+		if(Objects.isNull(todo.getDone())) {
+			throw new TodoBadRequestException("Done is mandatory");
 		}
 	}
 }

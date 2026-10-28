@@ -19,6 +19,11 @@ public class Todo {
 	private String title;
 
 	private String description;
+
+	private Boolean done;
+
+
+	private String priority;
+	private String[] tags;
 	
-	private Boolean completed;
 }
