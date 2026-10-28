@@ -60,7 +60,9 @@ public class TodoController {
 		var entity = todoRepository.findById(id).orElseThrow(()-> new TodoNotFoundException(id));
 		entity.setTitle(todo.getTitle());
 		entity.setDescription(todo.getDescription());
-		entity.setCompleted(todo.getCompleted());
+		entity.setDone(todo.getDone());
+		entity.setPriority(todo.getPriority());
+		entity.setTags(todo.getTags());
 		todoRepository.save(entity);
 		return entity;
 	
