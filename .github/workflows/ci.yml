@@ -100,4 +100,11 @@ jobs:
 
           git add cd_front/todo-front.yaml cd_front_prod/todo-front.yaml
           git commit -m "ci: deploy todo-front image ${{ github.sha }}" || echo "no changes to commit"
-          git push
+
+          for i in 1 2 3 4 5; do
+            git push && break
+            echo "push rejete (autre pipeline a pousse en parallele), retry $i avec rebase..."
+            git fetch origin main
+            git rebase origin/main
+            sleep 2
+          done

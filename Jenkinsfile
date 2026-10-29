@@ -95,7 +95,14 @@ pipeline {
 
                         git add cd_back/todo-api.yaml cd_back_prod/todo-api.yaml
                         git commit -m "ci: deploy todo-api image ${IMAGE_TAG}" || echo "no changes to commit"
-                        git push origin HEAD:main
+
+                        for i in 1 2 3 4 5; do
+                            git push origin HEAD:main && break
+                            echo "push rejete (autre pipeline a pousse en parallele), retry \$i avec rebase..."
+                            git fetch origin main
+                            git rebase origin/main
+                            sleep 2
+                        done
                     """
                 }
             }
