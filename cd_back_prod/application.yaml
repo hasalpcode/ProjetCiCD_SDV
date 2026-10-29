@@ -19,5 +19,6 @@ spec:
 
   # Pas de syncPolicy.automated ici volontairement :
   # la promotion en prod doit rester manuelle (clic "Sync" dans l'UI ArgoCD du VPS).
-  syncOptions:
-    - CreateNamespace=true
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
