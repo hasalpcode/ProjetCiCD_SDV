@@ -13,7 +13,7 @@ describe('TaskFormPage', () => {
 
     fixture = TestBed.createComponent(TaskFormPage);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

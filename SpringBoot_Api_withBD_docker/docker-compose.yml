@@ -1,5 +1,3 @@
-version: '3.8'
-
 volumes:
   todo_api_springboot_mysql-data:
 
