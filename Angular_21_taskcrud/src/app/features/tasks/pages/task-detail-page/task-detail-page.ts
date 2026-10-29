@@ -13,6 +13,6 @@ export class TaskDetailPage {
   id = input.required<string>();
 
   task = computed(() =>
-    this.taskService.allTasks().find(t => t.id === Number(this.id()))
+    this.taskService.allTasks().find((t) => t.id === Number(this.id()))
   );
 }

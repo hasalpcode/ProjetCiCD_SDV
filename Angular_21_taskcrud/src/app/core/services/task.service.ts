@@ -12,22 +12,15 @@ export class TaskService {
 
   private api_url = 'http://localhost:8080/api/todos';
 
-  //  private tasks = signal<Task[]>([
-  //   { id: 1, title: 'Apprendre les Signals', description: 'signal, computed, effect', done: true,  priority: 'haute',   tags: ['angular', 'signals'] },
-  //   { id: 2, title: 'Comprendre les services', description: 'Injection de dépendances', done: false, priority: 'moyenne', tags: ['angular', 'services'] },
-  //   { id: 3, title: 'Créer TaskForm',          description: 'Ajouter des tâches',        done: false, priority: 'basse',   tags: ['pratique'] },
-  // ]);
-
   private tasks = signal<Task[]>([]);
 
   private http = inject(HttpClient);
 
-  readonly allTasks = this.http.get<Task[]>(this.api_url);
+  readonly allTasks = this.tasks;
 
   readonly doneTasks = computed(() => this.tasks().filter(task => task.done).length);
 
-
-  readonly pendingTasksCount = computed(()=> this.tasks().filter(t=> !t.done).length)
+  readonly pendingTasksCount = computed(() => this.tasks().filter(t => !t.done).length);
 
   getAllTasks() {
     this.taskRepository.getAll().subscribe({
@@ -35,6 +28,7 @@ export class TaskService {
       error: err => console.error('Erreur chargement:', err),
     });
   }
+
   toggleTaskDone(id: number) {
     this.taskRepository.toggle(id).subscribe({
       next: updated => this.tasks.update(list => list.map(t => t.id === id ? updated : t)),
@@ -43,18 +37,16 @@ export class TaskService {
   }
 
   addTask(request: { title: string; description: string; priority: string; tags: string[] }) {
-     this.taskRepository.create(request).subscribe({
+    this.taskRepository.create(request).subscribe({
       next: created => this.tasks.update(list => [...list, created]),
       error: err => console.error('Erreur ajout:', err),
     });
   }
 
   removeTask(id: number) {
-   this.taskRepository.delete(id).subscribe({
+    this.taskRepository.delete(id).subscribe({
       next: () => this.tasks.update(list => list.filter(t => t.id !== id)),
       error: err => console.error('Erreur suppression:', err),
     });
   }
-
-
 }
