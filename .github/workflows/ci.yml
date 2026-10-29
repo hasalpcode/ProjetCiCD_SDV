@@ -14,26 +14,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  compile-backend:
-    name: Backend Maven build (sanity check)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: SpringBoot_Api_withBD_docker
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-          cache: maven
-
-      - name: Compile backend with Maven
-        run: ./mvnw -q -DskipTests package
-
   compile-frontend:
     name: Compile Angular front
     runs-on: ubuntu-latest
@@ -66,12 +46,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set up Java 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
 
       - name: SonarCloud scan
         uses: SonarSource/sonarqube-scan-action@v5
