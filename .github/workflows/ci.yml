@@ -17,7 +17,7 @@ jobs:
   compile-frontend:
     name: Compile Angular front
     runs-on: ubuntu-latest
-    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')
+    if: "github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')"
     defaults:
       run:
         working-directory: Angular_21_taskcrud
@@ -42,7 +42,7 @@ jobs:
     name: SonarCloud analysis
     needs: compile-frontend
     runs-on: ubuntu-latest
-    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')
+    if: "github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
     name: Build, scan (Trivy) and push to Docker Hub
     needs: sonar
     runs-on: ubuntu-latest
-    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')
+    if: "github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')"
     permissions:
       contents: write
     env:
