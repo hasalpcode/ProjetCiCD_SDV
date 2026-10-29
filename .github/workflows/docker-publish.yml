@@ -31,18 +31,18 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/todo-api
+          images: hasalpcode/projet_ci_cd_sdv-front
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
             type=ref,event=tag
             type=sha
 
-      - name: Build and push backend image
+      - name: Build and push frontend image
         uses: docker/build-push-action@v6
         with:
-          context: ./SpringBoot_Api_withBD_docker
-          file: ./SpringBoot_Api_withBD_docker/Dockerfile
+          context: ./Angular_21_taskcrud
+          file: ./Angular_21_taskcrud/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
