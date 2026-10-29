@@ -11,10 +11,18 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    def lastMsg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                    env.IS_GITOPS_COMMIT = lastMsg.startsWith('ci: deploy todo-api image') ? 'true' : 'false'
+                    if (env.IS_GITOPS_COMMIT == 'true') {
+                        echo "Dernier commit = commit GitOps automatique ('${lastMsg}') -> on saute le reste du pipeline pour éviter une boucle infinie."
+                    }
+                }
             }
         }
 
         stage('Build & Package (Maven)') {
+            when { environment name: 'IS_GITOPS_COMMIT', value: 'false' }
             steps {
                 dir(APP_DIR) {
                     sh './mvnw clean package'
@@ -23,6 +31,7 @@ pipeline {
         }
 
         stage('SonarCloud Analysis') {
+            when { environment name: 'IS_GITOPS_COMMIT', value: 'false' }
             steps {
                 dir(APP_DIR) {
                     withSonarQubeEnv('SonarCloud') {
@@ -38,6 +47,7 @@ pipeline {
         }
 
         stage('Docker Build') {
+            when { environment name: 'IS_GITOPS_COMMIT', value: 'false' }
             steps {
                 dir(APP_DIR) {
                     sh "DOCKER_BUILDKIT=1 docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest ."
@@ -46,6 +56,7 @@ pipeline {
         }
 
         stage('Trivy Scan') {
+            when { environment name: 'IS_GITOPS_COMMIT', value: 'false' }
             steps {
                 sh """
                     docker run --rm \
@@ -57,6 +68,7 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
+            when { environment name: 'IS_GITOPS_COMMIT', value: 'false' }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
@@ -69,17 +81,19 @@ pipeline {
         }
 
         stage('Update GitOps manifest') {
+            when { environment name: 'IS_GITOPS_COMMIT', value: 'false' }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github_access', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
                     sh """
                         sed -i.bak "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" cd_back/todo-api.yaml
-                        rm -f cd_back/todo-api.yaml.bak
+                        sed -i.bak "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" cd_back_prod/todo-api.yaml
+                        rm -f cd_back/todo-api.yaml.bak cd_back_prod/todo-api.yaml.bak
 
                         git config user.email "jenkins-ci@local"
                         git config user.name "jenkins-ci"
                         git remote set-url origin https://\${GIT_USER}:\${GIT_TOKEN}@github.com/hasalpcode/ProjetCiCD_SDV.git
 
-                        git add cd_back/todo-api.yaml
+                        git add cd_back/todo-api.yaml cd_back_prod/todo-api.yaml
                         git commit -m "ci: deploy todo-api image ${IMAGE_TAG}" || echo "no changes to commit"
                         git push origin HEAD:main
                     """
