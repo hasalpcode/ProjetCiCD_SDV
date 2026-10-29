@@ -67,6 +67,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Update GitOps manifest') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github_access', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+                    sh """
+                        sed -i.bak "s|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" cd_back/todo-api.yaml
+                        rm -f cd_back/todo-api.yaml.bak
+
+                        git config user.email "jenkins-ci@local"
+                        git config user.name "jenkins-ci"
+                        git remote set-url origin https://\${GIT_USER}:\${GIT_TOKEN}@github.com/hasalpcode/ProjetCiCD_SDV.git
+
+                        git add cd_back/todo-api.yaml
+                        git commit -m "ci: deploy todo-api image ${IMAGE_TAG}" || echo "no changes to commit"
+                        git push origin HEAD:main
+                    """
+                }
+            }
+        }
     }
 
     post {
