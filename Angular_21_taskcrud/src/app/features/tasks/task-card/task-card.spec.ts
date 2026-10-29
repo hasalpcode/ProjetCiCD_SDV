@@ -13,7 +13,15 @@ describe('TaskCard', () => {
 
     fixture = TestBed.createComponent(TaskCard);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    component.mytask = {
+      id: 1,
+      title: 'Test task',
+      description: 'desc',
+      done: false,
+      priority: 'haute',
+      tags: ['angular']
+    };
+    fixture.detectChanges();
   });
 
   it('should create', () => {

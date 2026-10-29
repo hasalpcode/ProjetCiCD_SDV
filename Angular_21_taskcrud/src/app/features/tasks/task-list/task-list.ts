@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { Task } from '@core/models/task.model';
+import { Component, inject, OnInit } from '@angular/core';
 import { TaskCard } from '../task-card/task-card';
 import { TaskService } from '@core/services/task.service';
 
@@ -11,15 +10,15 @@ import { TaskService } from '@core/services/task.service';
 })
 export class TaskList implements OnInit {
 
-    private taskService = inject(TaskService);
+  private taskService = inject(TaskService);
 
-    
   tasks = this.taskService.allTasks;
   doneCount = this.taskService.doneTasks;
 
   ngOnInit() {
     this.taskService.getAllTasks();
   }
+
   onToggleDone(taskId: number) {
     this.taskService.toggleTaskDone(taskId);
   }
