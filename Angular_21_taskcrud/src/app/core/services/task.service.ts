@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Task } from '@core/models/task.model';
 import { TaskRepository } from '@core/repository/task.repository';
@@ -10,28 +9,19 @@ export class TaskService {
 
   private taskRepository = inject(TaskRepository);
 
-  private api_url = 'http://localhost:8080/api/todos';
-
   private tasks = signal<Task[]>([]);
 
-
-  readonly allTasks = this.tasks;
-
-
+  readonly allTasks = this.tasks.asReadonly();
 
   readonly doneTasks = computed(() => this.tasks().filter(task => task.done).length);
 
-readonly allTasks = this.tasks.asReadonly();
-  readonly pendingTasksCount = computed(()=> this.tasks().filter(t=> !t.done).length)
+  readonly pendingTasksCount = computed(() => this.tasks().filter(t => !t.done).length);
 
   getAllTasks() {
     this.taskRepository.getAll().subscribe({
       next: tasks => this.tasks.set(tasks),
-      
       error: err => console.error('Erreur chargement:', err),
     });
-
-    console.log('getAllTasks called, current tasks:', this.tasks());
   }
 
   toggleTaskDone(id: number) {

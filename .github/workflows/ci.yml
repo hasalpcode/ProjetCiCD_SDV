@@ -17,6 +17,7 @@ jobs:
   compile-frontend:
     name: Compile Angular front
     runs-on: ubuntu-latest
+    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')
     defaults:
       run:
         working-directory: Angular_21_taskcrud
@@ -41,6 +42,7 @@ jobs:
     name: SonarCloud analysis
     needs: compile-frontend
     runs-on: ubuntu-latest
+    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -57,6 +59,9 @@ jobs:
     name: Build, scan (Trivy) and push to Docker Hub
     needs: sonar
     runs-on: ubuntu-latest
+    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'ci: deploy todo-front image')
+    permissions:
+      contents: write
     env:
       IMAGE: hasalpcode/projet_ci_cd_sdv-front
     steps:
@@ -83,3 +88,16 @@ jobs:
           docker tag ${{ env.IMAGE }}:${{ github.sha }} ${{ env.IMAGE }}:latest
           docker push ${{ env.IMAGE }}:${{ github.sha }}
           docker push ${{ env.IMAGE }}:latest
+
+      - name: Update GitOps manifests (dev + prod)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          sed -i "s|image: ${{ env.IMAGE }}:.*|image: ${{ env.IMAGE }}:${{ github.sha }}|" cd_front/todo-front.yaml
+          sed -i "s|image: ${{ env.IMAGE }}:.*|image: ${{ env.IMAGE }}:${{ github.sha }}|" cd_front_prod/todo-front.yaml
+
+          git config user.email "github-actions-ci@local"
+          git config user.name "github-actions-ci"
+
+          git add cd_front/todo-front.yaml cd_front_prod/todo-front.yaml
+          git commit -m "ci: deploy todo-front image ${{ github.sha }}" || echo "no changes to commit"
+          git push
