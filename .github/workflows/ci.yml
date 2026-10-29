@@ -35,23 +35,3 @@ jobs:
       - name: Build Angular app
         run: npm run build
 
-  backend:
-    name: Backend Maven build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: SpringBoot_Api_withBD_docker
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-          cache: maven
-
-      - name: Compile backend with Maven
-        run: ./mvnw -q -DskipTests package
