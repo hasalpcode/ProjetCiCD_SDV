@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: todo-api-prod
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/hasalpcode/ProjetCiCD_SDV.git
+    targetRevision: main
+    path: cd_back_prod
+    directory:
+      exclude: "application.yaml"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  # Pas de syncPolicy.automated ici volontairement :
+  # la promotion en prod doit rester manuelle (clic "Sync" dans l'UI ArgoCD du VPS).
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

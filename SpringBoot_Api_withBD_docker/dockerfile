@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7
+
 # Étape 1 : Build avec Maven et Java 21 cette image ne va permettre que compiler l'application
 FROM eclipse-temurin:21-jdk-jammy AS build
 
@@ -9,14 +11,14 @@ COPY pom.xml ./
 COPY .mvn .mvn
 COPY mvnw ./
 
-# Télécharger les dépendances Maven (ça optimise le cache Docker)
-RUN ./mvnw dependency:go-offline
+# Télécharger les dépendances Maven (cache BuildKit persistant entre les builds, en plus du cache de layer Docker)
+RUN --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline
 
 # Copier le reste du projet
 COPY src ./src
 
 # Compiler et packager le projet en sautant les tests et un fichier .jar est généré dans /app/target/
-RUN ./mvnw install -DskipTests
+RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
 # Étape 2 : Image d'exécution avec Java 21 JRE, cette image ne permet que d'executer l'application
 FROM eclipse-temurin:21-jre-jammy

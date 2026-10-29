@@ -35,6 +35,7 @@ export class TaskFormPage {
       description: value.description!,
       priority: value.priority!,
       tags: value.tags ? value.tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) : [],
+      done: false,
     };
 
     this.taskService.addTask(request);
