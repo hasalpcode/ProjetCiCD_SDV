@@ -10,5 +10,5 @@ import { TaskList } from '@features/tasks/task-list/task-list';
   styleUrl: './app.css'
 })
 export class App {
-  title = signal('Mon Gestionnaire de Tâches');
+  title = signal('Gestionnaire de Tâches');
 }
