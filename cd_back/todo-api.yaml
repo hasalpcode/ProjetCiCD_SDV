@@ -18,7 +18,7 @@ spec:
           command: ['sh', '-c', 'until nc -z mysql-db 3306; do echo waiting for mysql-db; sleep 2; done']
       containers:
         - name: todo-api
-          image: hasalpcode/projet_ci_cd_sdv:61
+          image: hasalpcode/projet_ci_cd_sdv:63
           ports:
             - containerPort: 8080
           env:
