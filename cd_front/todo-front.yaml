@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: todo-front
-          image: hasalpcode/projet_ci_cd_sdv-front:8ab1c2e61291e91ecd7f319f9575bee55b18d150
+          image: hasalpcode/projet_ci_cd_sdv-front:bada12221ebffa3ed6b9e3afd5b0dc1703213958
           ports:
             - containerPort: 80
 ---
